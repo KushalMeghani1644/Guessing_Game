@@ -2,18 +2,48 @@ use rand::Rng;
 use std::io;
 fn main() {
     //Rust code for a number guessing game
-    let secret_number = rand::random_range(1..=100);
     println!("Welcome to the Number Guessing Game!");
-    println!("In how many attempts do you want to guess the number: ");
-    let mut attempts = String::new();
-    io::stdin()
-        .read_line(&mut attempts)
-        .expect("Failed to read line");
-    let max_attempts: u32 = attempts.trim().parse().expect("Please enter a number");
+    let secret_number = loop {
+        println!("Choose difficulty level: ");
+        println!("1. Easy(1 to 40)");
+        println!("2. Medium(1 to 60)");
+        println!("3. Hard(1 to 100)");
+
+        let mut difficulty_input = String::new();
+        io::stdin()
+            .read_line(&mut difficulty_input)
+            .expect("Failed to read line!");
+
+        match difficulty_input.trim() {
+            "1" => break rand::random_range(1..=40),
+            "2" => break rand::random_range(1..=60),
+            "3" => break rand::random_range(1..=100),
+            _ => println!("Please enter 1, 2, or 3."),
+        }
+    };
+    let max_attempts = loop {
+        println!("In how many attempts can you guess the number(max 50): ");
+
+        let mut attempts_input = String::new();
+        io::stdin()
+            .read_line(&mut attempts_input)
+            .expect("Failed to read line");
+
+        match attempts_input.trim().parse::<u32>() {
+            Ok(num) if num > 0 && num <= 50 => break num,
+            Ok(_) => println!("You can't have more than 50 attempts!"),
+            _ => println!("Please enter a valid positive number!"),
+        }
+    };
+
     println!("You have {} attempts to guess the number!", max_attempts);
+
     for attempts in 1..=max_attempts {
         let mut user_guess = String::new();
-        println!("Please enter your guess: ");
+        println!(
+            "Attempt {}/{} - Please enter your guess: ",
+            attempts, max_attempts
+        );
         io::stdin()
             .read_line(&mut user_guess)
             .expect("Failed to read line");
