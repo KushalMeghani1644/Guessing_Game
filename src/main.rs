@@ -38,11 +38,13 @@ fn main() {
 
     println!("You have {} attempts to guess the number!", max_attempts);
 
-    for attempts in 1..=max_attempts {
+    let mut attempts = 0;
+    while attempts < max_attempts {
         let mut user_guess = String::new();
         println!(
             "Attempt {}/{} - Please enter your guess: ",
-            attempts, max_attempts
+            attempts + 1,
+            max_attempts
         );
         io::stdin()
             .read_line(&mut user_guess)
@@ -54,6 +56,9 @@ fn main() {
                 continue;
             }
         };
+
+        attempts += 1;
+
         if guess == secret_number {
             println!("Congrats! You guesses the number!");
         } else if guess < secret_number {
